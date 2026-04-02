@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aryan's Temple Run | 3D</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body { margin: 0; overflow: hidden; background: #000; font-family: 'Poppins', sans-serif; }
+        #game-ui { position: absolute; top: 20px; width: 100%; text-align: center; color: #fbbf24; font-size: 32px; font-weight: 900; text-shadow: 0 0 15px rgba(251, 191, 36, 0.6); pointer-events: none; }
+        #instructions { position: absolute; bottom: 30px; width: 100%; text-align: center; color: white; font-size: 14px; letter-spacing: 2px; opacity: 0.6; }
+        #game-over { display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: white; background: rgba(15, 23, 42, 0.95); padding: 50px; border-radius: 30px; border: 2px solid #fbbf24; backdrop-filter: blur(10px); }
+        button { background: #fbbf24; border: none; color: #000; padding: 15px 40px; border-radius: 12px; cursor: pointer; margin-top: 25px; font-weight: 900; text-transform: uppercase; transition: 0.3s; }
+        button:hover { transform: scale(1.1); background: #f59e0b; }
+    </style>
+</head>
+<body>
+    <div id="game-ui">DISTANCE: <span id="score">0</span>m</div>
+    <div id="instructions">USE A & D OR ARROW KEYS TO SWITCH LANES</div>
+    
+    <div id="game-over">
+        <h1 style="color: #fbbf24; font-size: 48px; margin-bottom: 10px;">WASTED!</h1>
+        <p style="font-size: 20px;">You ran <span id="final-score">0</span> meters</p>
+        <button onclick="location.reload()">Run Again</button>
+    </div>
+
+    <script>
+        let scene, camera, renderer, player, clock;
+        let obstacles = [], coins = [];
+        let score = 0, speed = 0.6, isGameOver = false;
+        const LANES = [-2.5, 0, 2.5];
+        let currentLane = 1; // Start in middle lane
+
+        function init() {
+            scene = new THREE.Scene();
+            scene.fog = new THREE.Fog(0x000000, 10, 50);
+            
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            // Lighting
+            const light = new THREE.DirectionalLight(0xffffff, 1);
+            light.position.set(0, 10, 5);
+            scene.add(light);
+            scene.add(new THREE.AmbientLight(0x404040));
+
+            // Player (Aryan's Runner)
+            const geometry = new THREE.BoxGeometry(1, 1.5, 1);
+            const material = new THREE.MeshPhongMaterial({ color: 0x60a5fa, shininess: 100 });
+            player = new THREE.Mesh(geometry, material);
+            player.position.y = 0.75;
+            scene.add(player);
+
+            // Infinite Floor Logic
+            createFloor();
+
+            camera.position.set(0, 4, 8);
+            camera.lookAt(0, 0, -2);
+
+            spawnManager();
+            animate();
+        }
+
+        function createFloor() {
+            const floorGeo = new THREE.PlaneGeometry(8, 2000);
+            const floorMat = new THREE.MeshPhongMaterial({ color: 0x1e293b });
+            const floor = new THREE.Mesh(floorGeo, floorMat);
+            floor.rotation.x = -Math.PI / 2;
+            floor.position.z = -900;
+            scene.add(floor);
+
+            // Lane markers
+            for(let x of [-1.25, 1.25]) {
+                const lineGeo = new THREE.PlaneGeometry(0.1, 2000);
+                const lineMat = new THREE.MeshBasicMaterial({ color: 0x334155 });
+                const line = new THREE.Mesh(lineGeo, lineMat);
+                line.rotation.x = -Math.PI / 2;
+                line.position.set(x, 0.01, -900);
+                scene.add(line);
+            }
+        }
+
+        function spawnManager() {
+            setInterval(() => {
+                if(isGameOver) return;
+                const type = Math.random();
+                if(type > 0.4) spawnObstacle();
+            }, 600);
+        }
+
+        function spawnObstacle() {
+            const obsGeo = new THREE.BoxGeometry(2, Math.random() * 2 + 1, 1);
+            const obsMat = new THREE.MeshPhongMaterial({ color: 0xfbbf24 });
+            const obstacle = new THREE.Mesh(obsGeo, obsMat);
+            
+            obstacle.position.x = LANES[Math.floor(Math.random() * 3)];
+            obstacle.position.z = -60;
+            obstacle.position.y = obsGeo.parameters.height / 2;
+            
+            scene.add(obstacle);
+            obstacles.push(obstacle);
+        }
+
+        // Lane Switching Logic
+        window.addEventListener('keydown', (e) => {
+            if(isGameOver) return;
+            if((e.key === 'ArrowLeft' || e.key === 'a') && currentLane > 0) currentLane--;
+            if((e.key === 'ArrowRight' || e.key === 'd') && currentLane < 2) currentLane++;
+        });
+
+        function animate() {
+            if(isGameOver) return;
+            requestAnimationFrame(animate);
+
+            // Smooth Lane Transition
+            player.position.x = THREE.MathUtils.lerp(player.position.x, LANES[currentLane], 0.15);
+
+            // Move Obstacles
+            obstacles.forEach((obs, index) => {
+                obs.position.z += speed;
+
+                // Collision detection
+                const playerBox = new THREE.Box3().setFromObject(player);
+                const obsBox = new THREE.Box3().setFromObject(obs);
+                
+                if (playerBox.intersectsBox(obsBox)) {
+                    endGame();
+                }
+
+                if(obs.position.z > 15) {
+                    scene.remove(obs);
+                    obstacles.splice(index, 1);
+                }
+            });
+
+            // Update Score & Speed
+            score += 1;
+            document.getElementById('score').innerText = Math.floor(score/10);
+            speed += 0.0002;
+
+            renderer.render(scene, camera);
+        }
+
+        function endGame() {
+            isGameOver = true;
+            document.getElementById('game-over').style.display = 'block';
+            document.getElementById('final-score').innerText = Math.floor(score/10);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        init();
+    </script>
+</body>
+</html>

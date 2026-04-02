@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aryan | 3D Portfolio Experience</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap');
+        body { font-family: 'Poppins', sans-serif; scroll-behavior: smooth; overflow-x: hidden; background-color: #020617; }
+        
+        #three-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.3); }
+        .glass-navbar { background: rgba(2, 6, 23, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+
+        .text-gradient-3d { background: linear-gradient(135deg, #60a5fa 0%, #34d399 50%, #60a5fa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 10px rgba(96, 165, 250, 0.5)); animation: hueRotate 10s infinite linear; }
+        @keyframes hueRotate { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
+
+        .floating { animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0% { transform: translatey(0px); } 50% { transform: translatey(-15px); } 100% { transform: translatey(0px); } }
+
+        .card-3d-hover { transition: transform 0.2s ease; transform-style: preserve-3d; }
+        .icon-glow:hover { text-shadow: 0 0 20px rgba(96, 165, 250, 1), 0 0 30px rgba(96, 165, 250, 0.8); }
+    </style>
+</head>
+<body class="text-white">
+
+    <div id="three-container"></div>
+
+    <nav class="fixed w-full z-50 glass-navbar py-4 px-6 flex justify-between items-center shadow-lg">
+        <div class="text-3xl font-extrabold text-gradient-3d tracking-tighter">ARYAN.</div>
+        <div class="space-x-8 hidden md:flex font-medium">
+            <a href="#home" class="hover:text-blue-400 transition transform hover:scale-110">Home</a>
+            <a href="#about" class="hover:text-blue-400 transition transform hover:scale-110">About</a>
+            <a href="#skills" class="hover:text-blue-400 transition transform hover:scale-110">Skills</a>
+            <a href="#projects" class="hover:text-blue-400 transition transform hover:scale-110">Projects</a>
+        </div>
+        <div class="flex space-x-5">
+            <a href="https://www.linkedin.com/in/aryan-sharma-a964723a1/" target="_blank" class="text-blue-400 text-2xl hover:scale-125 transition drop-shadow-lg"><i class="fab fa-linkedin"></i></a>
+            <a href="https://www.instagram.com/aryan_pandit4946" target="_blank" class="text-pink-500 text-2xl hover:scale-125 transition drop-shadow-lg"><i class="fab fa-instagram"></i></a>
+        </div>
+    </nav>
+
+    <section id="home" class="min-h-screen flex items-center justify-center pt-24 px-6 relative overflow-hidden">
+        <div class="text-center z-10">
+            <div class="mb-10 inline-block p-1.5 rounded-full bg-gradient-to-br from-blue-500 to-emerald-500 shadow-2xl relative">
+                <div class="absolute inset-0 rounded-full animate-ping bg-blue-500 opacity-20"></div>
+                <img src="1766928292351.png" alt="Aryan Sharma" class="rounded-full w-48 h-48 border-4 border-slate-900 object-cover shadow-inner relative z-10">
+            </div>
+            <h1 class="text-7xl md:text-9xl font-black mb-6 tracking-tighter leading-none relative">
+                Hi, I'm <span class="text-blue-400 text-gradient-3d">ARYAN</span>
+            </h1>
+            <p class="text-2xl md:text-3xl text-slate-300 mb-12 max-w-3xl mx-auto leading-relaxed font-light">
+                Aspiring <span class="font-bold text-white">Software Developer</span> | E-commerce Entrepreneur | <span class="font-bold text-white">3D Experience</span> Creator
+            </p>
+            <div class="flex justify-center space-x-6">
+                <a href="#projects" class="bg-white text-slate-900 px-12 py-5 rounded-2xl font-black text-lg hover:bg-gradient-to-r hover:from-blue-500 hover:to-emerald-500 hover:text-white transition-all duration-300 shadow-2xl transform hover:scale-105 hover:-translate-y-2">My Work</a>
+                <a href="#contact" class="glass px-12 py-5 rounded-2xl font-black text-lg hover:bg-slate-800 transition shadow-lg transform hover:scale-105">Let's Talk</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-24 px-6 container mx-auto text-center relative z-10">
+        <h2 class="text-5xl font-extrabold mb-12 tracking-tight text-gradient-3d">About</h2>
+        <div class="glass p-12 rounded-[32px] max-w-4xl mx-auto text-slate-200 leading-loose shadow-3xl border border-slate-700/50 text-lg font-light floating">
+            Mera naam Aryan hai aur main ek motivated software development student hoon. Mujhe programming ka junoon hai aur main hamesha nayi <span class="font-semibold text-blue-300">3D aur interactive technologies</span> seekhne ke liye taiyar rehta hoon. Main ek e-commerce business bhi run karta hoon, jisse mujhe real-world business insight milti hai.
+        </div>
+    </section>
+
+    <section id="skills" class="py-24 px-6 relative z-10 rounded-[48px] my-10 mx-6 bg-slate-800/10">
+        <div class="container mx-auto">
+            <h2 class="text-5xl font-extrabold mb-20 text-center tracking-tight text-white">Skill</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-10">
+                <div class="glass p-10 rounded-[28px] text-center card-3d-hover" data-tilt>
+                    <i class="fas fa-code text-blue-500 text-6xl mb-6 icon-glow"></i>
+                    <p class="font-extrabold text-xl text-white tracking-tight">Web Development</p>
+                </div>
+                <div class="glass p-10 rounded-[28px] text-center card-3d-hover" data-tilt>
+                    <i class="fas fa-mobile-alt text-blue-400 text-6xl mb-6 icon-glow"></i>
+                    <p class="font-extrabold text-xl text-white tracking-tight">App Development</p>
+                </div>
+                <div class="glass p-10 rounded-[28px] text-center card-3d-hover" data-tilt>
+                    <i class="fas fa-video text-red-500 text-6xl mb-6 icon-glow"></i>
+                    <p class="font-extrabold text-xl text-white tracking-tight">3D Editing</p>
+                </div>
+                <div class="glass p-10 rounded-[28px] text-center card-3d-hover" data-tilt>
+                    <i class="fas fa-shopping-cart text-emerald-400 text-6xl mb-6 icon-glow"></i>
+                    <p class="font-extrabold text-xl text-white tracking-tight">E-commerce</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="py-24 px-6 container mx-auto relative z-10">
+        <h2 class="text-5xl font-extrabold mb-20 text-center tracking-tight text-gradient-3d">Project</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div class="glass rounded-[32px] overflow-hidden card-3d-hover border border-blue-900/30 cursor-pointer" onclick="window.location.href='game.html'" data-tilt>
+                <div class="h-64 bg-blue-900/40 flex items-center justify-center text-9xl">🏃‍♂️</div>
+                <div class="p-10 text-center">
+                    <h3 class="text-3xl font-black mb-4 text-white tracking-tighter">Box Game</h3>
+                    <p class="text-slate-300">An infinite 3D runner built with Three.js.</p>
+                </div>
+            </div>
+            <div class="glass rounded-[32px] overflow-hidden card-3d-hover border border-emerald-900/30 cursor-pointer" onclick="window.location.href='gym-tracker.html.html'" data-tilt>
+                <div class="h-64 bg-emerald-900/40 flex items-center justify-center text-9xl">🏋️‍♂️</div>
+                <div class="p-10 text-center">
+                    <h3 class="text-3xl font-black mb-4 text-white tracking-tighter">Gym Tracker Pro</h3>
+                    <p class="text-slate-300">Monitor workout data and visualize physical progress.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-24 px-6 text-center relative z-10 bg-slate-900/50 rounded-t-[48px] mt-10">
+        <h2 class="text-5xl font-extrabold mb-12 tracking-tight text-white">Let's Connect</h2>
+        <p class="text-slate-400 mb-12 max-w-xl mx-auto">Follow me or drop a message to discuss your next project!</p>
+        
+        <div class="flex justify-center space-x-12 md:space-x-20">
+            <div class="group">
+                <a href="https://www.linkedin.com/in/aryan-sharma-a964723a1/" target="_blank" class="block">
+                    <i class="fab fa-linkedin text-blue-400 text-7xl md:text-8xl transition duration-500 transform group-hover:scale-125 group-hover:rotate-6 drop-shadow-[0_0_15px_rgba(96,165,250,0.7)]"></i>
+                    <p class="mt-4 font-bold text-blue-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300">LinkedIn</p>
+                </a>
+            </div>
+            <div class="group">
+                <a href="https://www.instagram.com/aryan_pandit4946" target="_blank" class="block">
+                    <i class="fab fa-instagram text-pink-500 text-7xl md:text-8xl transition duration-500 transform group-hover:scale-125 group-hover:-rotate-6 drop-shadow-[0_0_15px_rgba(236,72,153,0.7)]"></i>
+                    <p class="mt-4 font-bold text-pink-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300">Instagram</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-12 text-center text-slate-500 border-t border-slate-800 bg-slate-900 relative z-10">
+        <p>© 2026 ARYAN SHARMA. Built with Passion & 3D Tech.</p>
+    </footer>
+
+    <script>
+        let scene, camera, renderer, particles, lines = [];
+        
+        function initThree() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('three-container').appendChild(renderer.domElement);
+
+            // 1. Static Blue Particles (Glow Dots)
+            const geometry = new THREE.BufferGeometry();
+            const vertices = [];
+            for (let i = 0; i < 2000; i++) {
+                vertices.push(THREE.MathUtils.randFloatSpread(2000), THREE.MathUtils.randFloatSpread(2000), THREE.MathUtils.randFloatSpread(2000));
+            }
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+            particles = new THREE.Points(geometry, new THREE.PointsMaterial({ color: 0x60a5fa, size: 2, transparent: true, opacity: 0.8 }));
+            scene.add(particles);
+
+            // 2. NEW Green Moving Lines (Running Lines)
+            // Original logic from Aryan's previous file
+            const lineMaterial = new THREE.LineBasicMaterial({ color: 0x34d399, transparent: true, opacity: 0.1 });
+            const lineGeometry = new THREE.BufferGeometry().setFromPoints( [ new THREE.Vector3( -1000, 0, 0 ), new THREE.Vector3( 1000, 0, 0 ) ] );
+            
+            for(let i=0; i<50; i++) {
+                const line = new THREE.Line(lineGeometry, lineMaterial);
+                line.position.y = THREE.MathUtils.randFloatSpread(2000); // Start Y
+                line.position.z = THREE.MathUtils.randFloatSpread(2000);
+                line.rotation.y = Math.random() * Math.PI;
+                scene.add(line);
+                lines.push(line);
+            }
+
+            camera.position.z = 500;
+        }
+
+        function animateThree() {
+            requestAnimationFrame(animateThree);
+            
+            // Rotate particles
+            particles.rotation.x += 0.0005;
+            particles.rotation.y += 0.0003;
+
+            // --- Move the lines down ---
+            for(let line of lines) {
+                line.position.y -= 1.5; // Speed down
+                if (line.position.y < -1000) {
+                    line.position.y = 1000; // Reset to top
+                }
+            }
+            
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        initThree();
+        animateThree();
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.3/vanilla-tilt.min.js"></script>
+    <script>
+        VanillaTilt.init(document.querySelectorAll("[data-tilt]"), {
+            max: 15, speed: 400, glare: true, "max-glare": 0.3
+        });
+    </script>
+
+</body>
+</html>

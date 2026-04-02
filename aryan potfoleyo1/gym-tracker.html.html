@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Progress Tracker | Pro</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: radial-gradient(circle at top right, #1e293b, #0f172a);
+            color: #f8fafc;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.8em;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 5px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        .input-section, .progress-section {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 25px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        h2 {
+            color: #60a5fa;
+            margin-bottom: 25px;
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+            color: #94a3b8;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.4);
+        }
+
+        .workout-list {
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .workout-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .workout-list::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 10px;
+        }
+
+        .workout-item {
+            background: #1e293b;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 16px;
+            border-left: 6px solid #3b82f6;
+            position: relative;
+            transition: transform 0.2s;
+        }
+
+        .workout-item:hover {
+            transform: scale(1.01);
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .delete-btn:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        .workout-header {
+            margin-bottom: 15px;
+        }
+
+        .exercise-name {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .date {
+            color: #64748b;
+            font-size: 0.85em;
+        }
+
+        .stats {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            flex: 1;
+            min-width: 80px;
+            text-align: center;
+            padding: 10px;
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            border-radius: 10px;
+        }
+
+        .stat-value {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #60a5fa;
+        }
+
+        .stat-label {
+            font-size: 0.7em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        .chart-container {
+            margin-top: 30px;
+            padding: 15px;
+            background: rgba(15, 23, 42, 0.4);
+            border-radius: 15px;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #64748b;
+            padding: 60px 20px;
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>PROGRESS TRACKER</h1>
+            <p style="opacity: 0.8;">Premium Workout Tracker</p>
+        </div>
+
+        <div class="main-content">
+            <div class="input-section">
+                <h2><i class="fas fa-plus-circle"></i> Add Session</h2>
+                <form id="workoutForm">
+                    <div class="form-group">
+                        <label>Exercise Name</label>
+                        <select id="exercise" required>
+                            <option value="">Choose...</option>
+                            <option value="Bench Press">Bench Press</option>
+                            <option value="Squat">Squat</option>
+                            <option value="Deadlift">Deadlift</option>
+                            <option value="Barbell Curl">Barbell Curl</option>
+                            <option value="Pull-ups">Pull-ups</option>
+                            <option value="Shoulder Press">Shoulder Press</option>
+                            <option value="Leg Press">Leg Press</option>
+                            <option value="Lats Pulldown">Lats Pulldown</option>
+                            <option value="Tricep Pushdown">Tricep Pushdown</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Weight (KG)</label>
+                        <input type="number" id="weight" step="0.5" placeholder="0.0" required>
+                    </div>
+                    <div style="display: flex; gap: 15px;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Reps</label>
+                            <input type="number" id="reps" placeholder="0" required>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Sets</label>
+                            <input type="number" id="sets" value="3" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn">Save Workout <i class="fas fa-arrow-right ml-2"></i></button>
+                </form>
+            </div>
+
+            <div class="progress-section">
+                <h2><i class="fas fa-history"></i> Recent Activity</h2>
+                <div id="workoutList" class="workout-list">
+                    <div class="empty-state">No history found. Start training!</div>
+                </div>
+                
+                <div class="chart-container" id="chartBox" style="display: none;">
+                    <canvas id="progressChart" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        class GymTracker {
+            constructor() {
+                this.workouts = JSON.parse(localStorage.getItem('gymWorkouts')) || [];
+                this.chart = null;
+                this.init();
+            }
+
+            init() {
+                this.bindEvents();
+                this.renderWorkouts();
+            }
+
+            bindEvents() {
+                document.getElementById('workoutForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.addWorkout();
+                });
+            }
+
+            addWorkout() {
+                const workout = {
+                    id: Date.now(),
+                    exercise: document.getElementById('exercise').value,
+                    weight: parseFloat(document.getElementById('weight').value),
+                    reps: parseInt(document.getElementById('reps').value),
+                    sets: parseInt(document.getElementById('sets').value),
+                    date: new Date().toLocaleDateString('en-GB', { day:'numeric', month:'short' }),
+                    totalVolume: parseFloat(document.getElementById('weight').value) * parseInt(document.getElementById('reps').value) * parseInt(document.getElementById('sets').value)
+                };
+
+                this.workouts.unshift(workout);
+                this.save();
+                this.renderWorkouts();
+                document.getElementById('workoutForm').reset();
+            }
+
+            deleteWorkout(id) {
+                if(confirm('Delete this record?')) {
+                    this.workouts = this.workouts.filter(w => w.id !== id);
+                    this.save();
+                    this.renderWorkouts();
+                }
+            }
+
+            save() {
+                localStorage.setItem('gymWorkouts', JSON.stringify(this.workouts));
+            }
+
+            renderWorkouts() {
+                const list = document.getElementById('workoutList');
+                const chartBox = document.getElementById('chartBox');
+
+                if (this.workouts.length === 0) {
+                    list.innerHTML = '<div class="empty-state">No workouts logged yet.</div>';
+                    chartBox.style.display = 'none';
+                    return;
+                }
+
+                chartBox.style.display = 'block';
+                list.innerHTML = this.workouts.map(w => `
+                    <div class="workout-item">
+                        <button class="delete-btn" onclick="tracker.deleteWorkout(${w.id})">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        <div class="workout-header">
+                            <div class="exercise-name">${w.exercise}</div>
+                            <div class="date">${w.date}</div>
+                        </div>
+                        <div class="stats">
+                            <div class="stat">
+                                <div class="stat-value">${w.weight}kg</div>
+                                <div class="stat-label">Weight</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">${w.reps}</div>
+                                <div class="stat-label">Reps</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">${w.sets}</div>
+                                <div class="stat-label">Sets</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">${Math.round(w.totalVolume)}</div>
+                                <div class="stat-label">Volume</div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                this.updateChart();
+            }
+
+            updateChart() {
+                const ctx = document.getElementById('progressChart').getContext('2d');
+                const latest = {};
+                this.workouts.forEach(w => {
+                    if (!latest[w.exercise]) latest[w.exercise] = w;
+                });
+
+                if (this.chart) this.chart.destroy();
+
+                this.chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(latest),
+                        datasets: [{
+                            label: 'Max Weight (kg)',
+                            data: Object.values(latest).map(w => w.weight),
+                            backgroundColor: '#3b82f6',
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b' } },
+                            x: { grid: { display: false }, ticks: { color: '#64748b' } }
+                        }
+                    }
+                });
+            }
+        }
+
+        const tracker = new GymTracker();
+    </script>
+</body>
+</html>
